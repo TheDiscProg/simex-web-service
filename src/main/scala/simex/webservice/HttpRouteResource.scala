@@ -1,6 +1,5 @@
 package simex.webservice
 
-import cats.Monad
 import cats.arrow.FunctionK
 import cats.effect.Async
 import cats.implicits._
@@ -12,7 +11,7 @@ import org.http4s.{EntityDecoder, HttpRoutes, Request, Response, Status}
 import simex.messaging.Simex
 import simex.webservice.handler.SimexMessageHandlerAlgebra
 
-class HttpRouteResource[F[_]: Monad](
+class HttpRouteResource[F[_]](
     mapRoute: (String, Request[F], F[Response[F]]) => F[Response[F]] =
       (_: String, _: Request[F], r: F[Response[F]]) => r
 )(implicit F: Async[F])
@@ -53,7 +52,7 @@ class HttpRouteResource[F[_]: Monad](
               },
             body =>
               handler
-                .handleSimexRequest(HttpResponse)(body)
+                .handleSimexRequest(body)
                 .flatMap({
                   case b: HttpResponse.Ok =>
                     simexMessageOkEntityResponseGenerator(b.body)(F, simexMessageOkEncoder)

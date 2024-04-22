@@ -3,6 +3,7 @@ package simex.webservice.test
 import cats.effect.IO
 import cats.effect.kernel.Async
 import cats.effect.unsafe.IORuntime
+import cats.syntax.all._
 import io.circe.generic.semiauto.deriveEncoder
 import org.http4s._
 import org.http4s.circe._
@@ -17,6 +18,7 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 import simex.messaging.Simex
 import simex.webservice.HttpRouteResource
 import simex.webservice.services.{SimexMessageHandler, SimexMessageSecurityService}
+import simex.webservice.validation.{SimexRequestValidatorAlgebra, Validation, ValidationPassed}
 
 class SimexWebServiceTest
     extends AnyFlatSpec
@@ -99,10 +101,14 @@ class SimexWebServiceTest
       uri = uri"/simex-test"
     ).withEntity[Simex](msgBody)
 
-    val response = httpClient.expect[Simex](request).unsafeToFuture()
+    val response: IO[(Simex, Status)] = for {
+      msg <- httpClient.expect[Simex](request)
+      status <- httpClient.status(request)
+    } yield (msg, status)
 
-    whenReady(response) { s =>
-      s shouldBe msgBody
+    whenReady(response.unsafeToFuture()) { r =>
+      r._1 shouldBe msgBody
+      r._2 shouldBe Status.Ok
     }
   }
 
@@ -113,18 +119,28 @@ class SimexWebServiceTest
       uri = uri"/simex-test"
     ).withEntity[Simex](msgBody)
 
-    val response = httpClient.expect[Simex](request).unsafeToFuture()
+    val response: IO[(Simex, Status)] = for {
+      msg <- httpClient.expect[Simex](request)
+      status <- httpClient.status(request)
+    } yield (msg, status)
 
-    whenReady(response) { s =>
-      s shouldBe msgBody
+    whenReady(response.unsafeToFuture()) { r =>
+      r._1 shouldBe msgBody
+      r._2 shouldBe Status.Ok
     }
   }
 
   def httpRoutes[F[_]: Async: Logger]: HttpRoutes[F] = {
     //Security Service
     val securityService = new SimexMessageSecurityService[F]()
+
+    //Validator
+    val validator = new SimexRequestValidatorAlgebra[F] {
+      override def validateRequest(request: Simex): F[Validation] =
+        (ValidationPassed(): Validation).pure[F]
+    }
     //Endpoint Handler
-    val endpointHandler = new SimexMessageHandler[F](URL, securityService)
+    val endpointHandler = new SimexMessageHandler[F](URL, securityService, validator)
     // Http Routes
     new HttpRouteResource[F]().routes(endpointHandler)
   }

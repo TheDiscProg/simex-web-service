@@ -5,8 +5,6 @@ import simex.webservice.security.SecurityResponseResource.SecurityResponse
 
 trait SimexMessageSecurityServiceAlgebra[F[_]] {
 
-  def handleSimexRequest(respond: SecurityResponseResource.SecurityResponse.type)(
-      body: Simex
-  ): F[SecurityResponse]
+  def checkSecurityForRequest(request: Simex): F[SecurityResponse]
 
 }

@@ -8,10 +8,8 @@ import simex.webservice.security.{SecurityResponseResource, SimexMessageSecurity
 
 class SimexMessageSecurityService[F[_]: Applicative] extends SimexMessageSecurityServiceAlgebra[F] {
 
-  override def handleSimexRequest(
-      respond: SecurityResponseResource.SecurityResponse.type
-  )(body: Simex): F[SecurityResponse] =
-    if (body.client.authorization != "securitytoken")
+  override def checkSecurityForRequest(request: Simex): F[SecurityResponse] =
+    if (request.client.authorization != "securitytoken")
       (SecurityResponseResource.SecurityResponse.SecurityFailed: SecurityResponse).pure[F]
     else
       (SecurityResponseResource.SecurityResponse.SecurityPassed: SecurityResponse).pure[F]

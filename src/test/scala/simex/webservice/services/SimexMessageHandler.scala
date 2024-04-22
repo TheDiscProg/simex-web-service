@@ -9,20 +9,20 @@ import simex.webservice.HttpResponseResource.HttpResponse
 import simex.webservice.handler.SimexMessageHandlerAlgebra
 import simex.webservice.security.SecurityResponseResource.SecurityResponse
 import simex.webservice.security.SimexMessageSecurityServiceAlgebra
+import simex.webservice.validation.SimexRequestValidatorAlgebra
 
 class SimexMessageHandler[F[_]: Monad: Logger](
     override val urlPath: String,
-    securityService: SimexMessageSecurityServiceAlgebra[F]
-) extends SimexMessageHandlerAlgebra[F](urlPath, securityService) {
+    securityService: SimexMessageSecurityServiceAlgebra[F],
+    validator: SimexRequestValidatorAlgebra[F]
+) extends SimexMessageHandlerAlgebra[F](urlPath, securityService, validator) {
 
-  override def handleSimexRequest(respond: HttpResponseResource.HttpResponse.type)(
-      body: Simex
-  ): F[HttpResponseResource.HttpResponse] =
+  override def handleValidatedSimexRequest(request: Simex): F[HttpResponse] =
     for {
-      _ <- Logger[F].info(s"SimexMessageHandler - handling [$body]")
-      securityCheck <- securityService.handleSimexRequest(SecurityResponse)(body)
+      _ <- Logger[F].info(s"SimexMessageHandler - handling [$request]")
+      securityCheck <- securityService.checkSecurityForRequest(request)
       response <- securityCheck match {
-        case SecurityResponse.SecurityPassed => handleSimexMessage(body)
+        case SecurityResponse.SecurityPassed => handleSimexMessage(request)
         case SecurityResponse.SecurityFailed => HttpResponse.Forbidden.pure[F]
       }
     } yield response
@@ -34,4 +34,5 @@ class SimexMessageHandler[F[_]: Monad: Logger](
       case "3" => HttpResponse.Ok(simex): HttpResponse
       case _ => HttpResponse.BadRequest: HttpResponse
     }).pure[F]
+
 }

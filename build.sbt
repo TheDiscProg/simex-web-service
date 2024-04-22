@@ -2,7 +2,7 @@ import sbtghpackages.GitHubPackagesPlugin.autoImport.githubRepository
 
 ThisBuild / organization := "simex"
 
-ThisBuild / version := "0.8.0"
+ThisBuild / version := "1.0.0"
 
 lazy val commonSettings = Seq(
   scalaVersion := "2.13.10",
