@@ -1,10 +1,22 @@
-package simex.webservice.test
+package io.github.thediscprog.simex.webservice.test
 
 import cats.effect.IO
 import cats.effect.kernel.Async
 import cats.effect.unsafe.IORuntime
 import cats.syntax.all._
+import io.circe.Encoder
 import io.circe.generic.semiauto.deriveEncoder
+import io.github.thediscprog.simex.webservice.HttpRouteResource
+import io.github.thediscprog.simex.webservice.services.{
+  SimexMessageHandler,
+  SimexMessageSecurityService
+}
+import io.github.thediscprog.simex.webservice.validation.{
+  SimexRequestValidatorAlgebra,
+  Validation,
+  ValidationPassed
+}
+import io.github.thediscprog.simexmessaging.messaging.Simex
 import org.http4s._
 import org.http4s.circe._
 import org.http4s.client.Client
@@ -13,12 +25,8 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.{Millis, Seconds, Span}
-import org.typelevel.log4cats.Logger
+import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import simex.messaging.Simex
-import simex.webservice.HttpRouteResource
-import simex.webservice.services.{SimexMessageHandler, SimexMessageSecurityService}
-import simex.webservice.validation.{SimexRequestValidatorAlgebra, Validation, ValidationPassed}
 
 class SimexWebServiceTest
     extends AnyFlatSpec
@@ -28,17 +36,17 @@ class SimexWebServiceTest
 
   implicit val runtime: IORuntime = cats.effect.unsafe.IORuntime.global
 
-  implicit def unsafeLogger = Slf4jLogger.getLogger[IO]
+  implicit def unsafeLogger: SelfAwareStructuredLogger[IO] = Slf4jLogger.getLogger[IO]
 
-  implicit val defaultPatience =
+  implicit val defaultPatience: PatienceConfig =
     PatienceConfig(timeout = Span(30, Seconds), interval = Span(100, Millis))
 
   implicit val simexMessageDecoder: EntityDecoder[IO, Simex] = jsonOf[IO, Simex]
-  implicit val simexMessageOkEncoder = jsonEncoderOf[IO, Simex]
+  implicit val simexMessageOkEncoder: EntityEncoder[IO, Simex] = jsonEncoderOf[IO, Simex]
 
   private case class AClass(value: String)
-  private implicit val aClassEncoder = deriveEncoder[AClass]
-  private implicit val aClassEntityEncoder = jsonEncoderOf[IO, AClass]
+  private implicit val aClassEncoder: Encoder.AsObject[AClass] = deriveEncoder[AClass]
+  private implicit val aClassEntityEncoder: EntityEncoder[IO, AClass] = jsonEncoderOf[IO, AClass]
 
   val URL = "simex-test"
 

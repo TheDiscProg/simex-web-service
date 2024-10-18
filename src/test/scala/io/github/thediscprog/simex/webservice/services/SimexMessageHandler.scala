@@ -1,15 +1,15 @@
-package simex.webservice.services
+package io.github.thediscprog.simex.webservice.services
 
 import cats._
 import cats.syntax.all._
+import io.github.thediscprog.simex.webservice.HttpResponseResource
+import io.github.thediscprog.simex.webservice.handler.SimexMessageHandlerAlgebra
+import io.github.thediscprog.simex.webservice.validation.SimexRequestValidatorAlgebra
 import org.typelevel.log4cats.Logger
-import simex.messaging.Simex
-import simex.webservice.HttpResponseResource
-import simex.webservice.HttpResponseResource.HttpResponse
-import simex.webservice.handler.SimexMessageHandlerAlgebra
-import simex.webservice.security.SecurityResponseResource.SecurityResponse
-import simex.webservice.security.SimexMessageSecurityServiceAlgebra
-import simex.webservice.validation.SimexRequestValidatorAlgebra
+import HttpResponseResource.HttpResponse
+import io.github.thediscprog.simex.webservice.security.SecurityResponseResource.SecurityResponse
+import io.github.thediscprog.simex.webservice.security.SimexMessageSecurityServiceAlgebra
+import io.github.thediscprog.simexmessaging.messaging.Simex
 
 class SimexMessageHandler[F[_]: Monad: Logger](
     override val urlPath: String,

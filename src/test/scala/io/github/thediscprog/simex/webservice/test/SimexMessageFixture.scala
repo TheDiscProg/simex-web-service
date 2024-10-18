@@ -1,8 +1,8 @@
-package simex.webservice.test
+package io.github.thediscprog.simex.webservice.test
 
-import simex.messaging.Datum
-import simex.test.SimexTestFixture
-import thediscprog.slogic.Xor
+import io.github.thediscprog.simexmessaging.messaging.Datum
+import io.github.thediscprog.simexmessaging.test.SimexTestFixture
+import io.github.thediscprog.slogic.Xor
 
 trait SimexMessageFixture extends SimexTestFixture {
 

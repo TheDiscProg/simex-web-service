@@ -1,4 +1,4 @@
-package simex.webservice.validation
+package io.github.thediscprog.simex.webservice.validation
 
 sealed trait Validation {
   val status: String
