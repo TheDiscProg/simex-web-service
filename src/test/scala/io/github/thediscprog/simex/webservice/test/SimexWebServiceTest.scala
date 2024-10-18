@@ -7,8 +7,15 @@ import cats.syntax.all._
 import io.circe.Encoder
 import io.circe.generic.semiauto.deriveEncoder
 import io.github.thediscprog.simex.webservice.HttpRouteResource
-import io.github.thediscprog.simex.webservice.services.{SimexMessageHandler, SimexMessageSecurityService}
-import io.github.thediscprog.simex.webservice.validation.{SimexRequestValidatorAlgebra, Validation, ValidationPassed}
+import io.github.thediscprog.simex.webservice.services.{
+  SimexMessageHandler,
+  SimexMessageSecurityService
+}
+import io.github.thediscprog.simex.webservice.validation.{
+  SimexRequestValidatorAlgebra,
+  Validation,
+  ValidationPassed
+}
 import io.github.thediscprog.simexmessaging.messaging.Simex
 import org.http4s._
 import org.http4s.circe._
@@ -20,7 +27,6 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.{Millis, Seconds, Span}
 import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-
 
 class SimexWebServiceTest
     extends AnyFlatSpec

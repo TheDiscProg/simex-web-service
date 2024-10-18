@@ -2,7 +2,10 @@ package io.github.thediscprog.simex.webservice.services
 
 import cats.Applicative
 import cats.syntax.all._
-import io.github.thediscprog.simex.webservice.security.{SecurityResponseResource, SimexMessageSecurityServiceAlgebra}
+import io.github.thediscprog.simex.webservice.security.{
+  SecurityResponseResource,
+  SimexMessageSecurityServiceAlgebra
+}
 import io.github.thediscprog.simex.webservice.security.SecurityResponseResource.SecurityResponse
 import io.github.thediscprog.simexmessaging.messaging.Simex
 
