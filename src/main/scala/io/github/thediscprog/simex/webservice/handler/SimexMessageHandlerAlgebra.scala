@@ -1,20 +1,17 @@
-package simex.webservice.handler
+package io.github.thediscprog.simex.webservice.handler
 
 import cats.Monad
-import simex.messaging.Simex
-import simex.webservice.HttpResponseResource
-import simex.webservice.security.SecurityResponseResource.SecurityResponse
-import simex.webservice.security.SimexMessageSecurityServiceAlgebra
-import simex.webservice.validation.{
-  SimexRequestValidatorAlgebra,
-  ValidationFailed,
-  ValidationPassed
-}
+import io.github.thediscprog.simex.webservice.security.SecurityResponseResource.SecurityResponse
 import cats.syntax.all._
-import simex.webservice.HttpResponseResource.HttpResponse
+import io.github.thediscprog.simex.webservice.HttpResponseResource
+import io.github.thediscprog.simex.webservice.security.SimexMessageSecurityServiceAlgebra
+import HttpResponseResource.HttpResponse
+import io.github.thediscprog.simex.webservice.validation.{SimexRequestValidatorAlgebra, ValidationFailed, ValidationPassed}
+import io.github.thediscprog.simexmessaging.messaging.Simex
 
 /** The HTTP web service handler for SIMEX message.
   * Each webservice handler should handle one and only one URL.
+ *
   * @param urlPath - the URL path for the web service that it handles
   * @param securityService - the security service implementation that checks the security
   * @tparam F - the monad wrapper for the return types

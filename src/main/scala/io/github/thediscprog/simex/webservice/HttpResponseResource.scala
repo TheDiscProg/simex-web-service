@@ -1,6 +1,6 @@
-package simex.webservice
+package io.github.thediscprog.simex.webservice
 
-import simex.messaging.Simex
+import io.github.thediscprog.simexmessaging.messaging.Simex
 
 object HttpResponseResource {
 

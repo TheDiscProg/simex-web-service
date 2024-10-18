@@ -1,4 +1,4 @@
-package simex.webservice.security
+package io.github.thediscprog.simex.webservice.security
 
 object SecurityResponseResource {
 

@@ -1,15 +1,15 @@
-package simex.webservice
+package io.github.thediscprog.simex.webservice
 
 import cats.arrow.FunctionK
 import cats.effect.Async
 import cats.implicits._
+import io.github.thediscprog.simex.webservice.handler.SimexMessageHandlerAlgebra
+import io.github.thediscprog.simexmessaging.messaging.Simex
 import org.http4s.EntityEncoder.stringEncoder
 import org.http4s.circe.CirceInstances
 import org.http4s.dsl.Http4sDsl
 import org.http4s.dsl.impl.EntityResponseGenerator
 import org.http4s.{EntityDecoder, HttpRoutes, Request, Response, Status}
-import simex.messaging.Simex
-import simex.webservice.handler.SimexMessageHandlerAlgebra
 
 class HttpRouteResource[F[_]](
     mapRoute: (String, Request[F], F[Response[F]]) => F[Response[F]] =

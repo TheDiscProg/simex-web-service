@@ -1,5 +1,5 @@
-# simex-web-service (1.0.0)
-A REST web service for handling SIMEX messages
+# simex-web-service (0.9.2)
+A web service for handling SIMEX messages (v0.9.2) in Scala 2 and 3.
 
 ## Overview
 In order to use this library within a project:

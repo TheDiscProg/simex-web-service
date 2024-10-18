@@ -1,10 +1,10 @@
-package simex.webservice.services
+package io.github.thediscprog.simex.webservice.services
 
 import cats.Applicative
 import cats.syntax.all._
-import simex.messaging.Simex
-import simex.webservice.security.SecurityResponseResource.SecurityResponse
-import simex.webservice.security.{SecurityResponseResource, SimexMessageSecurityServiceAlgebra}
+import io.github.thediscprog.simex.webservice.security.{SecurityResponseResource, SimexMessageSecurityServiceAlgebra}
+import io.github.thediscprog.simex.webservice.security.SecurityResponseResource.SecurityResponse
+import io.github.thediscprog.simexmessaging.messaging.Simex
 
 class SimexMessageSecurityService[F[_]: Applicative] extends SimexMessageSecurityServiceAlgebra[F] {
 
